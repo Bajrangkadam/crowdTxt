@@ -1,4 +1,3 @@
-
 # MarketWatch API
 ---
 ## Features:
