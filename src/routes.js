@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import swaggerSpec from './utils/swagger';
 import usersController from './controllers/users';
+import companyController from './controllers/company';
 
 /**
  * Contains all API routes for the application.
@@ -52,6 +53,9 @@ router.get('/', (req, res) => {
   });
 });
 
-router.use('/users', usersController);
+router.use('/user', usersController);
+router.use('/resource', companyController);
+router.use('/v1', companyController);
+
 
 export default router;

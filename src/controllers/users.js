@@ -28,11 +28,11 @@ router.get('/:id', (req, res, next) => {
 /**
  * POST /api/users
  */
-router.post('/', userValidator, (req, res, next) => {
+router.post('/authenticate', (req, res, next) => {
   userService
-    .createUser(req.body)
-    .then(data => res.status(HttpStatus.CREATED).json({ data }))
-    .catch(err => next(err));
+    .authenticateUser(req.body)
+    .then(data => res.status(data.status).send(data))
+    .catch(err => res.status(err.status).send(err));
 });
 
 /**
