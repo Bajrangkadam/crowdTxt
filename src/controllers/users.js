@@ -26,16 +26,6 @@ router.get('/:id', (req, res, next) => {
 });
 
 /**
- * POST /api/users
- */
-router.post('/authenticate', (req, res, next) => {
-  userService
-    .authenticateUser(req.body)
-    .then(data => res.status(data.status).send(data))
-    .catch(err => res.status(err.status).send(err));
-});
-
-/**
  * PUT /api/users/:id
  */
 router.put('/:id', findUser, userValidator, (req, res, next) => {

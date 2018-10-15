@@ -2,6 +2,8 @@ import { Router } from 'express';
 import swaggerSpec from './utils/swagger';
 import usersController from './controllers/users';
 import companyController from './controllers/company';
+import subController from './controllers/subController';
+import jwt from 'jsonwebtoken';
 
 /**
  * Contains all API routes for the application.
@@ -53,9 +55,46 @@ router.get('/', (req, res) => {
   });
 });
 
-router.use('/user', usersController);
-router.use('/resource', companyController);
-router.use('/v1', companyController);
+router.use('/user',  usersController);
+router.use('/resource', subController);
+router.use('/v1', tokenVerify, companyController);
+
+// app.use(function (request, res, next) {
+// 	if (request.url.indexOf('login') > -1) {
+// 		next();
+// 	} else {
+// 		verifyAccessToken(request, res, next);
+// 	}
+// });
+
+/**
+   * VERIFY JWT TOKEN.
+   *
+   * @param  {string}  token
+   * @return {Promise}
+   */
+
+function tokenVerify(req, res, next) {
+  console.log(req.headers);
+  
+  let token = req && req.headers && req.headers['x-auth-token'];
+  return new Promise(function (resolve, reject) {
+    if (token) {
+      jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
+        if (err) {
+          res.status(401).send({ statusCode: 401, message: 'Failed to authenticate token.' });
+        } else {
+          console.log('decoded==',decoded);
+          
+          req.userData = decoded;
+          next();
+        }
+      })
+    } else {
+      res.status(404).send({ statusCode: 404, message: 'No token found.' });
+    }
+  })
+}
 
 
 export default router;

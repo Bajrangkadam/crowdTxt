@@ -43,8 +43,7 @@ export function getAllUsers(companyid) {
  * @return {Promise}
  */
 export function authenticateUser(data) {
-    console.log('data===',typeof data);
-    
+    console.log('data===',typeof data);    
     return new Promise(function (resolve, reject) {
         const query = `select * from public.authenticate_user(user_email:=${commonFunctions.getPostGreParam(data.email, "string")},
         user_password:=${commonFunctions.getPostGreParam(data.password, "string")})`;
@@ -55,7 +54,7 @@ export function authenticateUser(data) {
             if (productData && productData.data && productData.data.length ==0) {
                 return reject(productData);
             } else {                
-                let token = jwt.sign({ productData: productData }, 'crowdtxt', {
+                let token = jwt.sign({ productData: productData }, process.env.JWT_SECRET, {
                     expiresIn: 86400 // expires in 24 hours
                 });
                 productData.token = token;
