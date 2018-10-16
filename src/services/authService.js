@@ -54,31 +54,6 @@ export function getPlandetailById(planId) {
 }
 
 /**
-* Get company info by Id.
-*
-* @return {Promise}
-*/
-export function getCompanyInfoById(companyId) {
-    return new Promise(function (resolve, reject) {
-        const query = `select * from public.get_company_info(companyid:=${(companyId)})`;
-        console.log('query---', query);
-        return dbFunction(query).then(productData => {
-            console.log('productData---', productData, typeof productData);
-            if (!productData) {
-                return reject({ statusCode: 404, message: 'No data found.' });
-            } else {
-                productData = JSON.parse(productData[0].get_company_info);
-                return resolve(productData);
-            }
-        })
-            .catch(function (err) {
-                return reject(err);
-            })
-    })
-
-}
-
-/**
 * company sign up.
 *
 * @return {Promise}
@@ -138,7 +113,7 @@ export function authenticateUser(data) {
             if (productData && productData.data && productData.data.length == 0) {
                 return reject(productData);
             } else {
-                let token = jwt.sign({ productData: productData }, process.env.JWT_SECRET, {
+                let token = jwt.sign(productData.data[0], process.env.JWT_SECRET, {
                     expiresIn: 86400 // expires in 24 hours
                 });
                 productData.token = token;

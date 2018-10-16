@@ -38,17 +38,6 @@ router.post('/company/signup', (req, res, next) => {
 });
 
 /**
- * GET /api/users/:id
- */
-router.get('/Company/info/:id', (req, res, next) => {
-  console.log('req.params.id===',req.params.id);
-  authService
-    .getCompanyInfoById(req.params.id)
-    .then(data => res.json({ data }))
-    .catch(err => next(err));
-});
-
-/**
  * POST /api/users
  */
 router.post('/authenticate', (req, res, next) => {

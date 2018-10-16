@@ -2,7 +2,7 @@ import Boom from 'boom';
 import dbFunction from '../dbQueryRunner';
 import { log } from 'util';
 import commonFunctions from '../utils/commonFunctions.js';
-import jwt from 'jsonwebtoken';
+
 
 /**
  * Get all users.
@@ -21,8 +21,8 @@ export function getAllUsers(companyid) {
     return new Promise(function (resolve, reject) {
         const query = `select * from public.get_company_master(companyid:=${(1)})`;
         return dbFunction(query).then(productData => {
-            console.log('productData---',productData, typeof productData);
-            
+            console.log('productData---', productData, typeof productData);
+
             if (!productData) {
                 return reject({ statusCode: 404, message: 'No data found.' });
             } else {
@@ -30,43 +30,14 @@ export function getAllUsers(companyid) {
                 return resolve(productData);
             }
         })
-        .catch(function (err) {
-            return reject(err);
-        })
+            .catch(function (err) {
+                return reject(err);
+            })
     })
 
 }
 
-/**
- * Get all users.
- *
- * @return {Promise}
- */
-export function authenticateUser(data) {
-    console.log('data===',typeof data);    
-    return new Promise(function (resolve, reject) {
-        const query = `select * from public.authenticate_user(user_email:=${commonFunctions.getPostGreParam(data.email, "string")},
-        user_password:=${commonFunctions.getPostGreParam(data.password, "string")})`;
-        console.log('query===',JSON.stringify(query));
-        
-        return dbFunction(query).then(productData => {
-            productData = JSON.parse(productData[0].authenticate_user);            
-            if (productData && productData.data && productData.data.length ==0) {
-                return reject(productData);
-            } else {                
-                let token = jwt.sign({ productData: productData }, process.env.JWT_SECRET, {
-                    expiresIn: 86400 // expires in 24 hours
-                });
-                productData.token = token;
-                return resolve(productData);
-            }
-        })
-        .catch(function (err) {
-            return reject(err);
-        })
-    })
 
- }
 
 /**
  * Get a user.

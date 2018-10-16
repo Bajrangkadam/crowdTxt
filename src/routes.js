@@ -75,8 +75,6 @@ router.use('/v1', tokenVerify, companyController);
    */
 
 function tokenVerify(req, res, next) {
-  console.log(req.headers);
-  
   let token = req && req.headers && req.headers['x-auth-token'];
   return new Promise(function (resolve, reject) {
     if (token) {
@@ -84,8 +82,7 @@ function tokenVerify(req, res, next) {
         if (err) {
           res.status(401).send({ statusCode: 401, message: 'Failed to authenticate token.' });
         } else {
-          console.log('decoded==',decoded);
-          
+          console.log('decoded==',decoded);          
           req.userData = decoded;
           next();
         }
